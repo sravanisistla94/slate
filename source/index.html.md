@@ -37,6 +37,145 @@ access_token = <ACCESS TOKEN>
 
 #Roboroy API
 
+## Meta Information 
+Meta information is needed while creating a new job.
+
+### Http Request
+
+`GET live.x0pa.com/api/api/Jobs/metaInformation`
+
+```shell
+curl https://live.x0pa.com/api/api/Jobs/metaInformation?access_token=<ACCESS TOKEN>
+```
+> The above command returns JSON structured like this:
+
+ ```json
+{
+    "meta":{
+        "jobFunctions":[
+            {
+                "functionId":1,
+                "functionName":"Accounting"
+            }
+        ],
+        "jobSeniorities":[
+            {
+                "seniorityId":1,
+                "seniorityName":"0 year"
+            }
+        ],
+        "qualificationTypes":[
+            {
+                "typeId":1,
+                "typeName":"Early Childhood Education"
+            },
+            {
+                "typeId":2,
+                "typeName":"Primary Education"
+            }
+        ],
+        "currencies":[
+            {
+                "currencyId":1,
+                "currencyShort":"AED",
+                "currencyFull":"United Arab Emirates Dirham",
+                "countryId":237
+            },
+            {
+                "currencyId":2,
+                "currencyShort":"AFN",
+                "currencyFull":"Afghanistan Afghani",
+                "countryId":1
+            }
+        ],
+        "terms":[
+            {
+                "termId":1,
+                "termName":"Permanent"
+            },
+            {
+                "termId":2,
+                "termName":"Contract"
+            },
+            {
+                "termId":3,
+                "termName":"Temporary"
+            }
+        ],
+        "hourTypes":[
+            {
+                "typeId":1,
+                "typeName":"Full-Time"
+            },
+            {
+                "typeId":2,
+                "typeName":"Part-Time"
+            },
+            {
+                "typeId":3,
+                "typeName":"PRN"
+            }
+        ],
+        "jobName":[
+            {
+                "nameId":1,
+                "nameName":"Able Seaman",
+                "linkedinJobnameId":null,
+                "companyId":null
+            }
+        ],
+        "skilltypes":[
+            {
+                "typeId":1,
+                "typeName":"Technical (Hard) Skills"
+            },
+            {
+                "typeId":2,
+                "typeName":"Transferable (Soft) Skills"
+            },
+            {
+                "typeId":3,
+                "typeName":"Languages"
+            },
+            {
+                "typeId":4,
+                "typeName":"General Skills"
+            }
+        ],
+        "countries":[
+            {
+                "countryId":1,
+                "countryShort":"AF",
+                "countryFull":"Afghanistan",
+                "countryCode":"+93"
+            },
+            {
+                "countryId":2,
+                "countryShort":"AX",
+                "countryFull":"Åland Islands",
+                "countryCode":"+358"
+            },
+            {
+                "countryId":105,
+                "countryShort":"IN",
+                "countryFull":"India",
+                "countryCode":"+91"
+            }
+        ],
+        "officeId":"4",
+        "company":{
+            "companyId":5143,
+            "companyName":"X0PA Ai Pte. Ltd.",
+            "description":"X0PA is a people management Enterprise system that uses data analytics, machine learning and proprietary algorithms to produce data-driven, evidenced-based predictions for business leaders, managers, employees and candidates.",
+            "website":"https://www.x0pa.com/",
+            "linkedinCompanyId":null
+        }
+    }
+}
+
+```
+this endpoint returns the meta information for creating a new job.
+
 ## Create New Job
 
 Creates a new job and after creating a new job it checks the skillsmusthave,
@@ -406,6 +545,52 @@ status      | string   | status of a particular applicant.
 ```
 this endpoint returns list of applications.
 
+## Resume Upload
+Uploads a resume 
+
+```shell
+
+curl -X POST \
+  'https://staging.x0pa.com/api/roboroy/resume_parse?access_token=<ACCESS TOKEN>' \
+  -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
+  -F 'file=@/home/xxxxx/xxxxxx/xxxx.pdf' \
+  -F job_Id=1 \
+  -F client=fastjobs
+```
+### Http Request
+
+`POST live.x0pa.com/api/roboroy/resume_parse`
+
+### Inputs
+
+Key | Value
+---- | ----
+file | resume file(s) 
+jobId | After creating a job it generates a unique id i.e(job id).
+client | constant value equal to fastjobs
+ 
+ > The above command returns JSON structured like this:
+
+ ```json
+{
+   "file_path_list":[
+      "roboroy/resume/raw/xxxx_320_20180821051653901461.pdf"
+   ],
+   "inconvertible_list":[
+
+   ],
+   "raw_name_list":[
+      "xxxx.pdf"
+   ],
+   "task_id":"8fc662a4-9a59-4f0f-bce0-b6e660a911c9_320_20180821051653902906",
+   "wrong_file_list":[
+
+   ]
+}
+
+```
+this endpoint uploads a resume for a particular job.
+
 
 #Enterprise API
 
@@ -745,6 +930,893 @@ curl https://live.x0pa.com/api/enterprise/v1/attributes?access_token=<ACCESS TOK
 
 ```
 this endpoint returns the dimension attributes.
+
+## Get DashboardAttributes
+It gives the analysis on the attributes(attrition retention performance gender)
+and gets the highest and lowest values of attributes based on each dimensions(job title, grade, location, department). In addition to this it will do the analysis on the predicted and current values and returns whether the isIncreaseGood is good or not.
+
+### Http Request
+
+`GET live.x0pa.com/api/enterprise/v1/dashboardattributes`
+
+```shell
+curl http://live.x0pa.com/api/enterprise/v1/dashboardattributes?access_token=<ACCESS TOKEN>
+```
+
+### List Of Attributes
+
+attribute  |  description
+-----------| ------------
+Attrition(HEADCOUNT) | No of employees at risk of leaving the organisation in next the 12                          months
+Retention(Loyalty) | The probability of the employees leaving the organisation in the next                       12 months
+Performance        | Predicted performance of employees over the next 12 months
+Gender proportion  | The breakdown of gender gaps between existing employe
+
+
+> The above command returns JSON structured like this:
+
+```json
+[
+    {
+        "name":"ATTRITION (HEADCOUNT)",
+        "isIncreaseGood":false,
+        "predicted":342,
+        "current":0,
+        "delta":null,
+        "highest":{
+            "label":"HIGHEST ATTRITION",
+            "value":[
+                {
+                    "label":"Job Title",
+                    "value":"Co-ordinator"
+                },
+                {
+                    "label":"Grade",
+                    "value":"E1"
+                },
+                {
+                    "label":"Location",
+                    "value":"CHINA"
+                },
+                {
+                    "label":"Department",
+                    "value":"MARKETING"
+                }
+            ]
+        },
+        "lowest":{
+            "label":"LOWEST ATTRITION",
+            "value":[
+                {
+                    "label":"Job Title",
+                    "value":"Co-ordinator"
+                },
+                {
+                    "label":"Grade",
+                    "value":"E1"
+                },
+                {
+                    "label":"Location",
+                    "value":"CHINA"
+                },
+                {
+                    "label":"Department",
+                    "value":"MARKETING"
+                }
+            ]
+        }
+    },
+    {
+        "name":"RETENTION (AVG. %)",
+        "isIncreaseGood":true,
+        "predicted":67.23889763779528,
+        "current":0,
+        "delta":null,
+        "highest":{
+            "label":"HIGHEST RETENTION",
+            "value":[
+
+            ]
+        },
+        "lowest":{
+            "label":"LOWEST RETENTION",
+            "value":[
+
+            ]
+        }
+    },
+    {
+        "name":"PERFORMANCE (AVG. %)",
+        "isIncreaseGood":true,
+        "predicted":61.105511811023625,
+        "current":0,
+        "delta":null,
+        "highest":{
+            "label":"HIGHEST PERFORMANCE",
+            "value":[
+
+            ]
+        },
+        "lowest":{
+            "label":"LOWEST PERFORMANCE",
+            "value":[
+
+            ]
+        }
+    },
+    {
+        "current":823,
+        "predicted":823,
+        "isIncreaseGood":true,
+        "name":"Gender Proportion (%)",
+        "delta":0,
+        "highest":{
+            "label":"HIGHEST PAYGAP",
+            "value":[
+
+            ]
+        },
+        "lowest":{
+            "label":"LOWEST PAYGAP",
+            "value":[
+
+            ]
+        }
+    }
+]
+```
+this endpoint returns the analysis on attributes based on each dimension. 
+
+## Get PayGap
+It gets the mean and median paygap based on the gender and ethnicity.
+Male and female percentages based on the paybands.
+paybands caterogizes as:
+paybandA - 0-25%
+paybandB - 25-50%
+paybandC - 50-75%
+paybandD - 75-100%
+It also gets mean,median and male female percentages on the paybands based on the dimensions (job title, grade, location, department) provided to filter the data.
+
+
+### Http Request
+
+`GET live.x0pa.com/api/enterprise/v1/paygap`
+
+```shell
+curl http://live.x0pa.com/api/enterprise/v1/paygap?access_token=<ACCESS TOKEN>
+```
+
+### Params
+
+   param      | type | descrption             
+--------------| ---- | ----------
+filter[{dimension:value}] | []array  | filters based on the dimension and value.
+ dimension                |  string  | dimension can be from the above mentioned list.
+ value                    |  string  | value of dimension.
+
+### Sample End Points
+
+### For single dimension 
+Example: Single dimension filter for location dimension with year
+
+`/api/enterprise/v1/paygap?filter=[{"location":"COUNTRY"},{"year":"YYYY"}]`
+
+
+### For Multiple Dimensions
+Example: multiple dimension filter for location and grade
+
+`/api/enterprise/v1/paygap?filter=[{"grade":"KEY"},{"location":"COUNTRY"}]`
+
+### For Multiple Dimensions With Multiple Matches
+
+Example: multiple dimensions with multiple matches for location and grade.
+
+`/api/enterprise/v1/paygap?filter=[{"grade":{"or":["x","Y"]}},{"location":{"or":["A","B"]}}]`
+> The above command returns JSON structured like this:
+
+```json
+{
+    "aggregations":{
+        "metrics":[
+            {
+                "key":"AUSTRALIA",
+                "type":"location",
+                "count":432,
+                "payBands":[
+                    {
+                        "malePercent":86.23853211009175,
+                        "femalePercent":13.761467889908257,
+                        "payBandName":"Pay Band D"
+                    },
+                    {
+                        "malePercent":75.70093457943925,
+                        "femalePercent":24.299065420560748,
+                        "payBandName":"Pay Band C"
+                    },
+                    {
+                        "malePercent":52.83018867924528,
+                        "femalePercent":47.16981132075472,
+                        "payBandName":"Pay Band B"
+                    },
+                    {
+                        "malePercent":43.63636363636363,
+                        "femalePercent":56.36363636363636,
+                        "payBandName":"Pay Band A"
+                    }
+                ],
+                "meanPayGap":16733.106261859582,
+                "medianPayGap":13691.8125,
+                "ethnicMeanPayGap":null,
+                "ethnicMedianPayGap":null
+            },
+            {
+                "key":"SINGAPORE",
+                "type":"location",
+                "count":51,
+                "payBands":[
+                    {
+                        "malePercent":84.61538461538461,
+                        "femalePercent":15.384615384615385,
+                        "payBandName":"Pay Band D"
+                    },
+                    {
+                        "malePercent":83.33333333333334,
+                        "femalePercent":16.666666666666664,
+                        "payBandName":"Pay Band C"
+                    },
+                    {
+                        "malePercent":76.92307692307693,
+                        "femalePercent":23.076923076923077,
+                        "payBandName":"Pay Band B"
+                    },
+                    {
+                        "malePercent":53.84615384615385,
+                        "femalePercent":46.15384615384615,
+                        "payBandName":"Pay Band A"
+                    }
+                ],
+                "meanPayGap":4761.283400809716,
+                "medianPayGap":2666.5,
+                "ethnicMeanPayGap":null,
+                "ethnicMedianPayGap":null
+            },
+            {
+                "key":"UK",
+                "type":"location",
+                "count":5,
+                "payBands":[
+                    {
+                        "malePercent":100,
+                        "femalePercent":0,
+                        "payBandName":"Pay Band D"
+                    },
+                    {
+                        "malePercent":100,
+                        "femalePercent":0,
+                        "payBandName":"Pay Band C"
+                    },
+                    {
+                        "malePercent":100,
+                        "femalePercent":0,
+                        "payBandName":"Pay Band B"
+                    },
+                    {
+                        "malePercent":50,
+                        "femalePercent":50,
+                        "payBandName":"Pay Band A"
+                    }
+                ],
+                "meanPayGap":23902.125,
+                "medianPayGap":27191.5,
+                "ethnicMeanPayGap":null,
+                "ethnicMedianPayGap":null
+            },
+        ]
+    },
+    "meanPayGap":12912.386292707335,
+    "medianPayGap":12649.5,
+    "ethnicMeanPayGap":null,
+    "ethnicMedianPayGap":null,
+    "payband":[
+        {
+            "malePercent":81.28654970760235,
+            "femalePercent":18.71345029239766,
+            "payBandName":"Pay Band D"
+        },
+        {
+            "malePercent":73.25581395348837,
+            "femalePercent":26.744186046511626,
+            "payBandName":"Pay Band C"
+        },
+        {
+            "malePercent":56.024096385542165,
+            "femalePercent":43.97590361445783,
+            "payBandName":"Pay Band B"
+        },
+        {
+            "malePercent":41.24293785310734,
+            "femalePercent":58.75706214689266,
+            "payBandName":"Pay Band A"
+        }
+    ]
+}
+
+```
+this endpoint returns the male and female payband percentages and mean median paygap for gender and ethnicity for global and filtered dimensions.
+
+## Get Measures
+It gets all the employee records for a company with company details and default year.
+It filters the data based on the dimensions(job title, grade, location, department) provided.
+It also gets the details of a particular employee by providing the profileKey.
+The configurations object contains the UI mapping variables to that of the result set.
+The column name suggests the configuration detail path of a particular field.
+The snapshot represent the dashboard mapping of the display names to that of the corresponding result
+It gets the stats(avg and sum) of all the employees based on the filtered data.
+
+### Http Request
+`GET live.x0pa.com/api/enterprise/v1/measures`
+
+```shell
+curl http://live.x0pa.com/api/enterprise/v1/measures?access_token=<ACCESS TOKEN>
+```
+### Params
+
+   param      | type | descrption             
+--------------| ---- | ----------
+filter[{dimension:value}] | []array  | filters based on the dimension and value.
+ dimension                |  string  | dimension can be from the above mentioned list.
+ value                    |  string  | value of dimension.
+
+### Sample End Points
+
+### For single dimension 
+Example: Single dimension filter for location dimension with year
+
+`/api/enterprise/v1/measures?filter=[{"location":"COUNTRY"},{"year":"YYYY"}]`
+
+
+### For Multiple Dimensions
+Example: multiple dimension filter for location and grade
+
+`/api/enterprise/v1/measures?filter=[{"grade":"KEY"},{"location":"COUNTRY"}]`
+
+### For Multiple Dimensions With Multiple Matches
+
+Example: multiple dimensions with multiple matches for location and grade.
+
+`/api/enterprise/v1/measures?filter=[{"grade":{"or":["x","Y"]}},{"location":{"or":["A","B"]}}]`
+
+> The above command returns JSON structured like this:
+
+```json
+{
+    "aggregations":{
+        "metrics":[
+            {
+                "name":"x0pa",
+                "value":1270,
+                "type":"company",
+                "displayType":"Company",
+                "records":[
+                    {
+                        "profileKey":"9",
+                        "gender":"male",
+                        "ethnicity":null,
+                        "joinDate":"2012-05-25",
+                        "age":28,
+                        "experience":5.4,
+                        "lastWorkingday":null,
+                        "maritalStatus":"S",
+                        "pastCompany":"",
+                        "history":[
+                            {
+                                "year":"2014",
+                                "monthlySalary":32716,
+                                "department":"MARKETING",
+                                "location":"AUSTRALIA",
+                                "jobTitle":"Engineer",
+                                "grade":"U2",
+                                "company":"x0pa",
+                                "actuals":{
+                                    "loyalty":{
+                                        "name":"Loyalty",
+                                        "values":{
+                                            "loyalty_actual":{
+                                                "name":"loyalty_actual",
+                                                "values":null
+                                            }
+                                        }
+                                    },
+                                    "performance":{
+                                        "name":"Performance",
+                                        "values":{
+                                            "performance_actual":{
+                                                "name":"performance_actual",
+                                                "values":null
+                                            }
+                                        }
+                                    },
+                                    "attrition":{
+                                        "name":"Attrition",
+                                        "values":{
+                                            "actual_attrition":{
+                                                "name":"actualAttrition",
+                                                "values":0
+                                            }
+                                        }
+                                    }
+                                },
+                                "predictions":{
+                                    "loyalty":{
+                                        "name":"Loyalty",
+                                        "values":{
+                                            "loyalty_predicted":{
+                                                "name":"loyalty_predicted",
+                                                "values":null
+                                            },
+                                            "loyalty_5percent":{
+                                                "name":"FivePercentLoyalty",
+                                                "values":null
+                                            },
+                                            "loyalty_10percent":{
+                                                "name":"TenPercentLoyalty",
+                                                "values":null
+                                            },
+                                            "loyalty_15percent":{
+                                                "name":"FifteenPercentLoyalty",
+                                                "values":null
+                                            },
+                                            "loyalty_imm_promotion":{
+                                                "name":"loyalty_imm_promotion",
+                                                "values":null
+                                            },
+                                            "loyalty_no_promotion":{
+                                                "name":"loyalty_no_promotion",
+                                                "values":null
+                                            }
+                                        }
+                                    },
+                                    "performance":{
+                                        "name":"Performance",
+                                        "values":{
+                                            "performance_predicted":{
+                                                "name":"performance_predicted",
+                                                "values":null
+                                            }
+                                        }
+                                    },
+                                    "attrition":{
+                                        "name":"Attrition",
+                                        "values":{
+                                            "predicted_attrition":{
+                                                "name":"predictedAttrition",
+                                                "values":null
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "year":"2015",
+                                "monthlySalary":38749,
+                                "department":"MARKETING",
+                                "location":"AUSTRALIA",
+                                "jobTitle":"Engineer",
+                                "grade":"U2",
+                                "company":"x0pa",
+                                "actuals":{
+                                    "loyalty":{
+                                        "name":"Loyalty",
+                                        "values":{
+                                            "loyalty_actual":{
+                                                "name":"loyalty_actual",
+                                                "values":null
+                                            }
+                                        }
+                                    },
+                                    "performance":{
+                                        "name":"Performance",
+                                        "values":{
+                                            "performance_actual":{
+                                                "name":"performance_actual",
+                                                "values":null
+                                            }
+                                        }
+                                    },
+                                    "attrition":{
+                                        "name":"Attrition",
+                                        "values":{
+                                            "actual_attrition":{
+                                                "name":"actualAttrition",
+                                                "values":0
+                                            }
+                                        }
+                                    }
+                                },
+                                "predictions":{
+                                    "loyalty":{
+                                        "name":"Loyalty",
+                                        "values":{
+                                            "loyalty_predicted":{
+                                                "name":"loyalty_predicted",
+                                                "values":null
+                                            },
+                                            "loyalty_5percent":{
+                                                "name":"FivePercentLoyalty",
+                                                "values":null
+                                            },
+                                            "loyalty_10percent":{
+                                                "name":"TenPercentLoyalty",
+                                                "values":null
+                                            },
+                                            "loyalty_15percent":{
+                                                "name":"FifteenPercentLoyalty",
+                                                "values":null
+                                            },
+                                            "loyalty_imm_promotion":{
+                                                "name":"loyalty_imm_promotion",
+                                                "values":null
+                                            },
+                                            "loyalty_no_promotion":{
+                                                "name":"loyalty_no_promotion",
+                                                "values":null
+                                            }
+                                        }
+                                    },
+                                    "performance":{
+                                        "name":"Performance",
+                                        "values":{
+                                            "performance_predicted":{
+                                                "name":"performance_predicted",
+                                                "values":null
+                                            }
+                                        }
+                                    },
+                                    "attrition":{
+                                        "name":"Attrition",
+                                        "values":{
+                                            "predicted_attrition":{
+                                                "name":"predictedAttrition",
+                                                "values":null
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "year":"2016",
+                                "monthlySalary":43787,
+                                "department":"ENGINEERING",
+                                "location":"AUSTRALIA",
+                                "jobTitle":"Engineer",
+                                "grade":"U3",
+                                "company":"x0pa",
+                                "actuals":{
+                                    "loyalty":{
+                                        "name":"Loyalty",
+                                        "values":{
+                                            "loyalty_actual":{
+                                                "name":"loyalty_actual",
+                                                "values":null
+                                            }
+                                        }
+                                    },
+                                    "performance":{
+                                        "name":"Performance",
+                                        "values":{
+                                            "performance_actual":{
+                                                "name":"performance_actual",
+                                                "values":null
+                                            }
+                                        }
+                                    },
+                                    "attrition":{
+                                        "name":"Attrition",
+                                        "values":{
+                                            "actual_attrition":{
+                                                "name":"actualAttrition",
+                                                "values":0
+                                            }
+                                        }
+                                    }
+                                },
+                                "predictions":{
+                                    "loyalty":{
+                                        "name":"Loyalty",
+                                        "values":{
+                                            "loyalty_predicted":{
+                                                "name":"loyalty_predicted",
+                                                "values":70.2
+                                            },
+                                            "loyalty_5percent":{
+                                                "name":"FivePercentLoyalty",
+                                                "values":0.58
+                                            },
+                                            "loyalty_10percent":{
+                                                "name":"TenPercentLoyalty",
+                                                "values":0.564
+                                            },
+                                            "loyalty_15percent":{
+                                                "name":"FifteenPercentLoyalty",
+                                                "values":0.55
+                                            },
+                                            "loyalty_imm_promotion":{
+                                                "name":"loyalty_imm_promotion",
+                                                "values":0.412
+                                            },
+                                            "loyalty_no_promotion":{
+                                                "name":"loyalty_no_promotion",
+                                                "values":0.424
+                                            }
+                                        }
+                                    },
+                                    "performance":{
+                                        "name":"Performance",
+                                        "values":{
+                                            "performance_predicted":{
+                                                "name":"performance_predicted",
+                                                "values":56
+                                            }
+                                        }
+                                    },
+                                    "attrition":{
+                                        "name":"Attrition",
+                                        "values":{
+                                            "predicted_attrition":{
+                                                "name":"predictedAttrition",
+                                                "values":0
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+
+                ]
+            }
+        ]
+    },
+    "defaultYear":2016
+},
+"configurations":{
+    "profile":{
+        "name":{
+            "columnName":"profileKey"
+        },
+        "demographic":[
+            {
+                "displayName":"Designation",
+                "columnName":"history.jobTitle"
+            },
+            {
+                "displayName":"Department",
+                "columnName":"history.department"
+            },
+            {
+                "displayName":"Grade",
+                "columnName":"history.grade"
+            },
+            {
+                "displayName":"Location",
+                "columnName":"history.location"
+            }
+        ],
+        "predictions":{
+            "loyalty":{
+                "displayName":"Retention",
+                "isPredicted":true,
+                "isIncreaseGood":true,
+                "values":[
+                    {
+                        "displayName":"Employee Score",
+                        "columnName":"history.predictions.loyalty.values.loyalty_predicted.values"
+                    },
+                    {
+                        "displayName":"Company Average",
+                        "value":67.23889763779528
+                    }
+                ],
+                "min":0.4,
+                "max":100
+            },
+            "performance":{
+                "displayName":"Performance",
+                "isPredicted":true,
+                "isIncreaseGood":true,
+                "values":[
+                    {
+                        "displayName":"Employee Score",
+                        "columnName":"history.predictions.performance.values.performance_predicted.values"
+                    },
+                    {
+                        "displayName":"Company Average",
+                        "value":61.105511811023625
+                    }
+                ],
+                "min":43,
+                "max":93
+            }
+        },
+        "recommendations":{
+            "retention":{
+                "displayName":"Retention",
+                "values":[
+                    {
+                        "displayName":"SALARY INCREASE 5%",
+                        "columnName":"history.predictions.loyalty.values.loyalty_5percent.values"
+                    },
+                    {
+                        "displayName":"SALARY INCREASE 10%",
+                        "columnName":"history.predictions.loyalty.values.loyalty_10percent.values"
+                    },
+                    {
+                        "displayName":"SALARY INCREASE 15%",
+                        "columnName":"history.predictions.loyalty.values.loyalty_15percent.values"
+                    },
+                    {
+                        "displayName":"PROMOTION - YES",
+                        "columnName":"history.predictions.loyalty.values.loyalty_imm_promotion.values"
+                    },
+                    {
+                        "displayName":"PROMOTION - NO",
+                        "columnName":"history.predictions.loyalty.values.loyalty_no_promotion.values"
+                    }
+                ]
+            },
+            "performance":{
+                "displayName":"Performance",
+                "values":[
+
+                ]
+            }
+        }
+    },
+    "snapshot":[
+        {
+            "displayName":"Name",
+            "columnName":"profileKey",
+            "isSearchOn":true
+        },
+        {
+            "displayName":"Retention",
+            "columnName":"history.predictions.loyalty.values.loyalty_predicted.values",
+            "isPredicted":true,
+            "isIncreaseGood":true,
+            "min":0.4,
+            "max":100
+        },
+        {
+            "displayName":"Performance",
+            "columnName":"history.predictions.performance.values.performance_predicted.values",
+            "isPredicted":true,
+            "isIncreaseGood":true,
+            "min":43,
+            "max":93
+        },
+        {
+            "displayName":"Exp",
+            "columnName":"experience"
+        },
+        {
+            "displayName":"Age",
+            "columnName":"age"
+        },
+        {
+            "displayName":"Current Salary",
+            "columnName":"history.monthlySalary"
+        },
+        {
+            "displayName":"Designation",
+            "columnName":"history.jobTitle",
+            "isSearchOn":true
+        },
+        {
+            "displayName":"Department",
+            "columnName":"history.department",
+            "isSearchOn":true
+        },
+        {
+            "displayName":"Grade",
+            "columnName":"history.grade",
+            "isSearchOn":true
+        },
+        {
+            "displayName":"Location",
+            "columnName":"history.location",
+            "isSearchOn":true
+        },
+        {
+            "displayName":"DOJ",
+            "columnName":"joinDate"
+        },
+        {
+            "displayName":"Gender",
+            "columnName":"gender",
+            "isSearchOn":true
+        },
+        {
+            "displayName":"Past Company",
+            "columnName":"pastCompany",
+            "isSearchOn":true
+        }
+    ]
+    }
+}
+
+```
+### For stats
+Example: multiple dimension filter for location and grade and stats(avg,sum) on the filters applied
+
+`/api/enterprise/v1/measures?filter=[{"grade":"KEY"},{"location":"COUNTRY"}]&stats=[{"avg":"loyalty_15percent"}]`
+
+`/api/enterprise/v1/measures?filter=[{"grade":"KEY"},{"location":"COUNTRY"}]&stats=[{"sum":"loyalty_15percent"}]`
+
+> The above command returns JSON structured like this:
+for sum:
+
+```json
+{
+    "aggregations":{
+        "metrics":[
+            {
+                "name":"x0pa",
+                "value":1270,
+                "dimensionsList":[
+                    {
+                        "value":"x0pa",
+                        "dimension":"company"
+                    }
+                ],
+                "predictions":{
+                    "loyalty":{
+                        "loyalty_15percent":{
+                            "columnName":"loyalty_15percent",
+                            "displayName":"loyalty_15percent",
+                            "value":665.4659999999999
+                        }
+                    }
+                }
+            }
+        ],
+        "defaultYear":2016
+    }
+}
+
+```
+> The above command returns JSON structured like this:
+for avg:
+
+```json
+{
+    "aggregations":{
+        "metrics":[
+            {
+                "name":"x0pa",
+                "value":1270,
+                "dimensionsList":[
+                    {
+                        "value":"x0pa",
+                        "dimension":"company"
+                    }
+                ],
+                "predictions":{
+                    "loyalty":{
+                        "loyalty_15percent":{
+                            "columnName":"loyalty_15percent",
+                            "displayName":"loyalty_15percent",
+                            "value":0.5239889763779527
+                        }
+                    }
+                }
+            }
+        ],
+        "defaultYear":2016
+    }
+}
+
+```
+this endpoint returns the details of a employees and stats.
 
 <aside class="notice">
 You must replace <code>meowmeowmeow</code> with your personal API key.
