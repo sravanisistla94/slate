@@ -19,15 +19,13 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Roboroy API main functionality of is to parse the resume successfully. When a recruiter prepares his desired job description details by creating a job and uploads a resume to that job, then the roboroy scripts will parse the resume, compares the requirements present in the job description with the details present in the resume. It identifies whether he is a right candidate to this job or not by calculating scores (like cv relevance, benchmark, loyalty, performance).based on the stats, recruiter will decide whether to shortlist this candidate for further proceedings or not.Once he shortlists the candidate, an email will be sent to candidate, upon accepting the email by the candidate, recruiter starts the workflow, (video interview, phone interview,...) and finally recruiter accepts or rejects his candidature. Talent pool and gloabl talent pool are nothing but storage of resumes. (kind of...). If recruiter interested in the candidate and wants to store resume internally into his application, he will add those resumes to talent pool. So that when he creates a job, he can upload the resume directly from talent pool search.
 
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
-
-This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
+Enterprise API gets stats of employees based on dimensions (job title, grade, location, department) of an organization. 
 
 # Authentication
 
-Please contact live.xopa.com to get the access token.
+Please contact x0pa engineering team to get the access token.
 
 > To authorize, use the access_token value in the parameter.
 
@@ -42,7 +40,7 @@ Meta information is needed while creating a new job.
 
 ### Http Request
 
-`GET live.x0pa.com/api/api/Jobs/metaInformation`
+`GET /api/api/Jobs/metaInformation`
 
 ```shell
 curl https://live.x0pa.com/api/api/Jobs/metaInformation?access_token=<ACCESS TOKEN>
@@ -186,7 +184,7 @@ the new entry in the job skill table.
 
 ### Http Request
       
- `CREATE live.x0pa.com/api/api/Jobs/createJob`
+ `CREATE /api/api/Jobs/createJob`
 
 ```shell
 curl -X POST 'https://live.x0pa.com/api/api/Jobs/createJob?access_token=<ACCESS TOKEN>' -H 'Content-Type:application/json' -d '{
@@ -326,7 +324,7 @@ gets the entire list of applicants
 
 ### Http Request
       
- `GET live.x0pa.com/api/api/Applications/findAllUserJobApplicants`
+ `GET /api/api/Applications/findAllUserJobApplicants`
 
 ```shell
 curl https://live.x0pa.com/api/api/Applications/findAllUserJobApplicants?access_token=<ACCESS TOKEN>&jobId=1&filter[limit]=10&filter[skip]=0&searchKey=abs&status=true
@@ -342,6 +340,11 @@ applicationId | integer | Applicants unique id after applying for a job.
 searchKey   | string   | key for searching a particular applicant from the results.
 filter[limit/skip]| number | it limits/skips the values.
 status      | string   | status of a particular applicant.
+loyalty     | numeric  | This metric signifies the probability of a candidate to be working                             at the same position for the next one year without intention to                                change.
+performance |  numeric | This metric signifies the probability for the candidate to deserve                             an earlier than average promotion.
+twoWayMatch |  numeric |  This score signifies how similar is the candidate's profile when                               compared to employees at similar position in an organization.
+skillMatchCustom | numeric | This score signifies how close the candidate's resume matches                                  with job description.
+
 > The above command returns JSON structured like this:
 
 ```json
@@ -551,7 +554,7 @@ Uploads a resume
 ```shell
 
 curl -X POST \
-  'https://staging.x0pa.com/api/roboroy/resume_parse?access_token=<ACCESS TOKEN>' \
+  'https://live.x0pa.com/api/roboroy/resume_parse?access_token=<ACCESS TOKEN>' \
   -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
   -F 'file=@/home/xxxxx/xxxxxx/xxxx.pdf' \
   -F job_Id=1 \
@@ -559,7 +562,7 @@ curl -X POST \
 ```
 ### Http Request
 
-`POST live.x0pa.com/api/roboroy/resume_parse`
+`POST /api/roboroy/resume_parse`
 
 ### Inputs
 
@@ -604,7 +607,7 @@ NOTE: The result will not contains the fields which are applied in filter
 ```
 ### Http Request
       
- `GET live.x0pa.com/api/enterprise/v1/dimensions`
+ `GET /api/enterprise/v1/dimensions`
 
 ### List Of Dimensions
 
@@ -804,7 +807,7 @@ Diversity gives the total male and female percentage for the filtered data set i
 
 ### Http Request
       
- `GET live.x0pa.com/api/enterprise/v1/diversity`
+ `GET /api/enterprise/v1/diversity`
 
 ```shell
 curl https://live.x0pa.com/api/enterprise/v1/diversity?access_token=<ACCESS TOKEN>
@@ -883,7 +886,7 @@ This result can be changes by altering the config file.
 
 ### Http Request
       
- `GET live.x0pa.com/api/enterprise/v1/attributes`
+ `GET /api/enterprise/v1/attributes`
 
 ```shell
 curl https://live.x0pa.com/api/enterprise/v1/attributes?access_token=<ACCESS TOKEN>
@@ -937,7 +940,7 @@ and gets the highest and lowest values of attributes based on each dimensions(jo
 
 ### Http Request
 
-`GET live.x0pa.com/api/enterprise/v1/dashboardattributes`
+`GET /api/enterprise/v1/dashboardattributes`
 
 ```shell
 curl http://live.x0pa.com/api/enterprise/v1/dashboardattributes?access_token=<ACCESS TOKEN>
@@ -1080,7 +1083,7 @@ It also gets mean,median and male female percentages on the paybands based on th
 
 ### Http Request
 
-`GET live.x0pa.com/api/enterprise/v1/paygap`
+`GET /api/enterprise/v1/paygap`
 
 ```shell
 curl http://live.x0pa.com/api/enterprise/v1/paygap?access_token=<ACCESS TOKEN>
@@ -1254,7 +1257,7 @@ The snapshot represent the dashboard mapping of the display names to that of the
 It gets the stats(avg and sum) of all the employees based on the filtered data.
 
 ### Http Request
-`GET live.x0pa.com/api/enterprise/v1/measures`
+`GET /api/enterprise/v1/measures`
 
 ```shell
 curl http://live.x0pa.com/api/enterprise/v1/measures?access_token=<ACCESS TOKEN>
